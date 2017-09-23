@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Rxswift," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="文章综述:最近一直再看RxSwift官方文档,同时也在看国内翻译比较好的文档靛青K,初步学习和尝试使用了RxSwift,下面是一些方法的介绍。我也找到github上面一个好的使用UITableView的例子，可惜运行不了了，经过修改，可以运行，也体验了这个过程。其地址:RxUITableViewControllerDemo.  下面的内容包括了很多的方法：&amp;apos;let variable =">
+<meta name="keywords" content="Rxswift">
+<meta property="og:type" content="article">
+<meta property="og:title" content="响应式编程学习，学习使用RxSwift">
+<meta property="og:url" content="http://yoursite.com/2016/11/30/RxSwift学习01/index.html">
+<meta property="og:site_name" content="PoetCoder">
+<meta property="og:description" content="文章综述:最近一直再看RxSwift官方文档,同时也在看国内翻译比较好的文档靛青K,初步学习和尝试使用了RxSwift,下面是一些方法的介绍。我也找到github上面一个好的使用UITableView的例子，可惜运行不了了，经过修改，可以运行，也体验了这个过程。其地址:RxUITableViewControllerDemo.  下面的内容包括了很多的方法：&amp;apos;let variable =">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-27T09:49:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="响应式编程学习，学习使用RxSwift">
+<meta name="twitter:description" content="文章综述:最近一直再看RxSwift官方文档,同时也在看国内翻译比较好的文档靛青K,初步学习和尝试使用了RxSwift,下面是一些方法的介绍。我也找到github上面一个好的使用UITableView的例子，可惜运行不了了，经过修改，可以运行，也体验了这个过程。其地址:RxUITableViewControllerDemo.  下面的内容包括了很多的方法：&amp;apos;let variable =">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/30/RxSwift学习01/"/>
+
+
+
+
+
+  <title>响应式编程学习，学习使用RxSwift | PoetCoder</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">PoetCoder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Coding! Fighting!</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/30/RxSwift学习01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PoetCoder">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PoetCoder">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">响应式编程学习，学习使用RxSwift</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-30T10:04:54+08:00">
+                2016-11-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/code/" itemprop="url" rel="index">
+                    <span itemprop="name">code</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>文章综述:最近一直再看<a href="https://github.com/ReactiveX/RxSwift" target="_blank" rel="external">RxSwift官方文档</a>,同时也在看国内翻译比较好的文档<a href="http://t.swift.gg/d/2-rxswift" target="_blank" rel="external">靛青K</a>,初步学习和尝试使用了RxSwift,下面是一些方法的介绍。我也找到github上面一个好的使用UITableView的例子，可惜运行不了了，经过修改，可以运行，也体验了这个过程。其地址:<a href="https://github.com/Wuluming/RxTableViewControllerDemo" target="_blank" rel="external">RxUITableViewControllerDemo</a>.</p>
+</blockquote>
+<h3 id="下面的内容包括了很多的方法："><a href="#下面的内容包括了很多的方法：" class="headerlink" title="下面的内容包括了很多的方法："></a>下面的内容包括了很多的方法：</h3><pre><code>&apos;let variable = Variable(&quot;z&quot;)
+variable.asObservable().subscribe { (e) in
+    print(&quot;Subscription: 1,event: \(e)&quot;)
+}.addDisposableTo(disposeBag)
+
+variable.value = &quot;a&quot;
+variable.value = &quot;b&quot;
+variable.asObservable().subscribe { (e) in
+    print(&quot;Subscription: 2, event: \(e)&quot;)
+}.addDisposableTo(disposeBag)
+variable.value = &quot;c&quot;
+variable.value = &quot;d&quot;
+
+//map方法
+let origunalSwquence = Observable.of(1,2,3)
+
+origunalSwquence
+    .map { (number) -&gt; Int in
+        number * 2
+}
+.subscribe { (e) in
+    print(e)
+}.addDisposableTo(disposeBag)
+
+//flatMap方法
+let squenceInt = Observable.of(1,2,3)
+let squenceString = Observable.of(&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,&quot;E&quot;,&quot;F&quot;,&quot;--&quot;)
+
+squenceInt
+    .flatMap { (x: Int) -&gt; Observable&lt;String&gt; in
+        print(&quot;from squenceInt \(x)&quot;)
+        return squenceString
+}
+.subscribe {
+    print($0)
+}
+.addDisposableTo(disposeBag)
+
+
+//scan方法
+let sequenceToSum = Observable.of(0,1,2,3,4,5)
+
+sequenceToSum
+    .scan(0) { (acum, elem) -&gt; Int in
+        acum + elem
+}
+    .subscribe {
+        print($0)
+}
+.addDisposableTo(disposeBag)
+//reduce方法
+sequenceToSum
+    .reduce(0) { (acum, elem) -&gt; Int in
+        acum + elem
+}
+    .subscribe { (sum) in
+        print(&quot;it is the final result \(sum)&quot;)
+}.addDisposableTo(disposeBag)
+//buffer方法
+sequenceToSum
+    .buffer(timeSpan: 5, count: 2, scheduler: MainScheduler.instance)
+    .subscribe { (e) in
+        print(e)
+}.addDisposableTo(disposeBag)
+//windown 方法
+sequenceToSum
+    .window(timeSpan: 5, count: 2, scheduler: MainScheduler.instance)
+    .subscribe { (e) in
+        print(&quot;windown = \(e)&quot;)
+}.addDisposableTo(disposeBag)
+
+sequenceToSum
+    .timeout(5, scheduler: MainScheduler.instance)
+    .subscribe { (e) in
+        print(&quot;timeout = \(e)&quot;)
+}.addDisposableTo(disposeBag)
+
+sequenceToSum
+    .delay(5, scheduler: MainScheduler.instance)
+    .subscribe { (e) in
+        print(&quot;delay = \(e)&quot;)
+        //效果比较明显，延迟5秒后，再输出
+}.addDisposableTo(disposeBag)
+
+
+//filter 实现便利操作 根据传入的predicate 进行筛选
+Observable.of(0,1,2,3,4,5,6,7,8,9)
+    .filter {
+        $0 % 2 == 0
+}.subscribe {
+    print($0)
+}.addDisposableTo(disposeBag)
+
+//DISTINCTUNTILCHANGED 阻止发射与上一个重复的值
+
+Observable.of(1,2,3,1,1,2,5)
+    .distinctUntilChanged()
+    .subscribe {
+        print($0)
+}.addDisposableTo(disposeBag)
+
+
+Observable.of(1,2,3,4,5,6)
+    .skip(3)
+    .subscribe {
+        print($0)
+}.addDisposableTo(disposeBag)
+
+
+//debounce和throttle抑制发射过快的值：场景：比如点击一个Button会请求一下数据，然而总有人想连续不停的点，这是就可以起作用
+Observable.of(1,2,3,4,5,6)
+    .debounce(5, scheduler: MainScheduler.instance)
+    .subscribe {
+        print($0)
+}.dispose()
+
+Observable.of(0)
+    .single()
+    .subscribe {
+        print($0)
+}.addDisposableTo(disposeBag)&apos;
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Rxswift/" rel="tag"># Rxswift</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/30/StopWatch/" rel="next" title="StopWatch">
+                <i class="fa fa-chevron-left"></i> StopWatch
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/17/随感001/" rel="prev" title="但行好事,莫问前程">
+                但行好事,莫问前程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/uploads/avatar.png"
+              alt="PoetCoder" />
+          
+            <p class="site-author-name" itemprop="name">PoetCoder</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#下面的内容包括了很多的方法："><span class="nav-number">1.</span> <span class="nav-text">下面的内容包括了很多的方法：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PoetCoder</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
