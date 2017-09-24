@@ -1079,8 +1079,11 @@ pre .javascript .function {
 .back-to-top.back-to-top-on {
   bottom: 30px;
 }
-.header {
+#.header {
   background: transparent;
+}
+.header {
+  background: url("https://ws4.sinaimg.cn/large/006tNc79ly1fjudecyal0j30dm08iq2w.jpg");
 }
 .header-inner {
   position: relative;
@@ -1819,7 +1822,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #0a83ff;
+  background: #13b9ff;
 }
 .links-of-blogroll {
   font-size: 13px;
