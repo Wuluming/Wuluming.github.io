@@ -1079,11 +1079,8 @@ pre .javascript .function {
 .back-to-top.back-to-top-on {
   bottom: 30px;
 }
-#.header {
-  background: transparent;
-}
 .header {
-  background: url("https://ws4.sinaimg.cn/large/006tNc79ly1fjudecyal0j30dm08iq2w.jpg");
+  background: transparent;
 }
 .header-inner {
   position: relative;
@@ -1822,7 +1819,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #13b9ff;
+  background: #180920;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2982,4 +2979,7 @@ pre .javascript .function {
   .post-body {
     text-align: justify;
   }
+}
+body {
+  background-image: url("https://ws4.sinaimg.cn/large/006tNc79ly1fjue1cxz0pj30j60cq77a.jpg");
 }
