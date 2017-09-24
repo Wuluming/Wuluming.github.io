@@ -362,84 +362,20 @@
       
         
           
-            <p>RunTime简称运行时,是系统在运行的时候的一些机制,其中最主要的是消息机制.</p>
-<p>C语言与OC语言的区别:</p>
-<ul>
-<li>对于C语言:函数的调用在编译的时候会决定调用哪个函数，编译按成之后顺序执行，无任何二义性。</li>
-<li>对于OC语言:函数的调用成为消息发送.属于动态调用过程.在编译的时候并不能决定真正调用哪个函数.</li>
-</ul>
-<h2 id="使用RunTime"><a href="#使用RunTime" class="headerlink" title="使用RunTime"></a>使用RunTime</h2><h3 id="拦截系统自带的方法调用"><a href="#拦截系统自带的方法调用" class="headerlink" title="拦截系统自带的方法调用:"></a>拦截系统自带的方法调用:</h3><h4 id="需要用到的方法"><a href="#需要用到的方法" class="headerlink" title="需要用到的方法: "></a>需要用到的方法: <objc runtime.h=""></objc></h4><pre><code>1. 获得某个类的方法:
-`Method class_getClassMethod(Class cls , SEL name)`
-2. 获得某个类的实例对象方法
-`Method class_getInstanceMethod(Class cls , SEL name)`
-3. 交换两个方法的实现:
-`void method_exchangeImplementation(Method m1 , Method m2)`
+          RunTime简称运行时,是系统在运行的时候的一些机制,其中最主要的是消息机制.
+C语言与OC语言的区别:
 
-Demo:
-创建一个Person类,勒种实现以下两个类方法,并在.文件中声明
-`+ (void)run {
-    NSLog(@&quot;跑&quot;);
-}
-+ (void)study {
-NSLog(@&quot;学习&quot;);
-}`
-控制器中调用，则先打印跑,后打印学习
-`
-[Person run];
-[Person study];
-`
-下面用过runtime实现方法交换,类方法用class_getClassMethod, 对象方法用calss_getInstaceMethod
-`
-//获取两个类的类方法:
-Method m1 = class_getClassMethod([Person class], @selector(run));
-Method m2 = class_getClassMethod([Person class], @selector(study));
-//开始交换方法实现:
-method_exchangeImplmentation(m1 , m2);
-//交换后，先打印学习,后打印跑!
-[Person run];
-[Person study];
-`
-</code></pre><h3 id="运行时的归档方法"><a href="#运行时的归档方法" class="headerlink" title="运行时的归档方法:"></a>运行时的归档方法:</h3><pre><code>`
-- (void)encodeWithCoder:(NSCoder *)encoder {
-unsigned int count = 0;
-Ivar * ivars = class_copyIvarList([Movie class], $count);
-for (int i = 0 ;i &lt; count;i++) {
-    //去除i位置对应的成员变量
-    Ivar ivar = ivars[i];
-    //查看成员变量
-    const char *name = ivar_getName(ivar);
-    //归档
-    NSString * key = [self stringWithUTF8String:name];
-    id value = [self valueForKey:key];
-    [encoder encodeObject:value forKey:key];
-}
-free(ivars);
-</code></pre><p>}</p>
-<pre><code>-(void)initWithCoder:(NSCoder *)Decoder {
-    if (self = [super init]){
-        unsigned int count = 0;
-        Ivar *ivars = class_copyIvarList([Movie class],$count);
-        for (int i = 0;i &lt; count;i++){
-            //取出i位置对应的成员处理
-            Ivar ivar = ivars[i];
-            //查看成员变量
-            const char * name = ivar_getName(ivar);
-            //归档
-            NSString * key = [NSString stringWithUTF8String:name];
-            id vlaue = [decoder decodeObjectForKey:key];
-            //设置到成员变量身上
-            [self setValue:value foeKey:key];
-        }
-        free(ivars);
-    }
-    return self;
-}`
-</code></pre><p>参考学习的文章:</p>
-<ul>
-<li><a href="http://ios.jobbole.com/87415/" target="_blank" rel="external">runtime</a></li>
-</ul>
+对于C语言:函数的调用在编译的时候会决定调用哪个函数，编译按成之后顺序执行，无任何二义性。
+对于OC语言:函数的调用成为消息发送.属于动态调用过程.在编译的时候并不能决定真正调用哪个函数.
 
-          
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/08/03/RunTime/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -557,12 +493,17 @@ free(ivars);
       
         
           
-            <p>经过在网上学习，解决了两个小问题。<br>(1)新建标签页面。</p>
-<p>##第一步：<br>   新建一个页面，命名为tags。命令如下：<br>   $ cd your-hexo-site<br>   $ hexo new page tags</p>
-<p>##第二步:<br>   编辑刚新建的页面，将页面的类型设置为tags，主题将自动显示标签页面。命令如下：<br>   title: 标签<br>   date: 2014-12-22 12:39:04<br>   type: “tags”</p>
-<p>##第三步：<br>   在菜单中添加链接。编辑 主题配置文件 ， 添加 tags 到 menu 中，如下:<br>   menu:<br>     home: /<br>     archives: /archives<br>     tags: /tags<br>(2)author中文乱码：文件保存为utf-8格式.</p>
-
-          
+          经过在网上学习，解决了两个小问题。(1)新建标签页面。
+##第一步：   新建一个页面，命名为tags。命令如下：   $ cd your-hexo-site   $ hexo new page tags
+##第二步:   编辑刚新建的页面，将页面的类型设置为tags，主题将自动显示标签页面。命令如
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/05/18/使用Hexo过程中遇到的问题/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -680,9 +621,16 @@ free(ivars);
       
         
           
-            <p>这是我写的第一条博客，特此纪念一下。</p>
+          这是我写的第一条博客，特此纪念一下。
 
           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/05/15/测试博文/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
