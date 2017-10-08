@@ -1819,7 +1819,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #00042b;
+  background: #87ff21;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2979,7 +2979,4 @@ pre .javascript .function {
   .post-body {
     text-align: justify;
   }
-}
-body {
-  background-image: url("https://ws4.sinaimg.cn/large/006tNc79ly1fjue1cxz0pj30j60cq77a.jpg");
 }
