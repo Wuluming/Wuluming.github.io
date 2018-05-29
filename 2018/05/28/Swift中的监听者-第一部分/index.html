@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="译文," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="这是一篇已经在我的博客发布的文章-Swift by Sundell。相比在这里阅读，我更推荐在我的博客，因为你可以看到高亮的语法、主题或者更多。    当我们构建App时，经常会发现我们需要处理对象之间一对多的情况。它可能是在同一种情况下多个对象都需要发生变化，或者当某个事件需要被广播到系统的不同部分。    在这些情况下，为特定的对象添加监听是非常普遍的。像大多数编程技术一样，在Swift中也有">
+<meta name="keywords" content="译文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swift中的监听者-第一部分">
+<meta property="og:url" content="http://yoursite.com/2018/05/28/Swift中的监听者-第一部分/index.html">
+<meta property="og:site_name" content="PoetCoder">
+<meta property="og:description" content="这是一篇已经在我的博客发布的文章-Swift by Sundell。相比在这里阅读，我更推荐在我的博客，因为你可以看到高亮的语法、主题或者更多。    当我们构建App时，经常会发现我们需要处理对象之间一对多的情况。它可能是在同一种情况下多个对象都需要发生变化，或者当某个事件需要被广播到系统的不同部分。    在这些情况下，为特定的对象添加监听是非常普遍的。像大多数编程技术一样，在Swift中也有">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-29T02:28:13.053Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Swift中的监听者-第一部分">
+<meta name="twitter:description" content="这是一篇已经在我的博客发布的文章-Swift by Sundell。相比在这里阅读，我更推荐在我的博客，因为你可以看到高亮的语法、主题或者更多。    当我们构建App时，经常会发现我们需要处理对象之间一对多的情况。它可能是在同一种情况下多个对象都需要发生变化，或者当某个事件需要被广播到系统的不同部分。    在这些情况下，为特定的对象添加监听是非常普遍的。像大多数编程技术一样，在Swift中也有">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/28/Swift中的监听者-第一部分/"/>
+
+
+
+
+
+  <title>Swift中的监听者-第一部分 | PoetCoder</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">PoetCoder</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Coding! Fighting!</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            project
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/Swift中的监听者-第一部分/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PoetCoder">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PoetCoder">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Swift中的监听者-第一部分</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T22:45:10+08:00">
+                2018-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这是一篇已经在我的博客发布的文章-Swift by Sundell。相比在这里阅读，我更推荐在我的博客，因为你可以看到高亮的语法、主题或者更多。<br>    当我们构建App时，经常会发现我们需要处理对象之间一对多的情况。它可能是在同一种情况下多个对象都需要发生变化，或者当某个事件需要被广播到系统的不同部分。<br>    在这些情况下，为特定的对象添加监听是非常普遍的。像大多数编程技术一样，在Swift中也有很多种为对象添加监听的能力—他们都有各自的利弊。这一周，我们先研究两种技术，下一周我们再研究其他的。<br>    下面我们开始潜水：<br>    实例：<br>    为了更直观的对不同技术进行比较，我们将尽力使用相同的实例。我们将会用AudioPlayer 类来做例子，让其他的对象监听它的状态(PlaybackState)。每当开始播放、暂停或者完成回放，我们希望通知它的监听者完成状态的改变。这样多个对象将逻辑与同一个播放器绑定，比如显示可播放项目的列表、播放器的UI以及在屏幕底部显示“迷你播放器”之类的功能按钮。<br>    下面是AudioPlayer类的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">class AudioPlayer &#123;</div><div class="line">    private var state = State.idle &#123;</div><div class="line">        // We add a property observer on &apos;state&apos;, which lets us</div><div class="line">        // run a function on each value change.</div><div class="line">        didSet &#123; stateDidChange() &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    func play(_ item: Item) &#123;</div><div class="line">        state = .playing(item)</div><div class="line">        startPlayback(with: item)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    func pause() &#123;</div><div class="line">        switch state &#123;</div><div class="line">        case .idle, .paused:</div><div class="line">            // Calling pause when we&apos;re not in a playing state</div><div class="line">            // could be considered a programming error, but since</div><div class="line">            // it doesn&apos;t do any harm, we simply break here.</div><div class="line">            break</div><div class="line">        case .playing(let item):</div><div class="line">            state = .paused(item)</div><div class="line">            pausePlayback()</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    func stop() &#123;</div><div class="line">        state = .idle</div><div class="line">        stopPlayback()</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<pre><code>从上面可以看出我们使用在之前在Modelling state in Swift中介绍的技巧，使用枚举来表示AudioPlayer类内部的不同状态。这样可以给我们更加清晰、定义明确的播放器状态，而不是可选或者多种真相。
+</code></pre><p>下面是我定义AudioPlayer状态的枚举：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">private extension AudioPlayer &#123;</div><div class="line">    enum State &#123;</div><div class="line">        case idle</div><div class="line">        case playing(Item)</div><div class="line">        case paused(Item)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<pre><code>在上面你可以看到每当播放状态变化的时候，每次我会调用方法，stateDidChange()，我们的主要工作就是使用不同的技术，不一样的实现方法来填充这个方法。
+通知中心：
+首先要看的就是系统NotificationCenter，每当播放状态改变的时候，我们就用它的API来发送广播。想大多数系统级别的API，NotificationCenter也是一个单例，为了明确表示我们依赖NotificationCenter来对AudioPlayer类来做测试，我们将在AudioPlayer类中注入一个notification center的实例，如下：
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">class AudioPlayer &#123;</div><div class="line">    private let notificationCenter: NotificationCenter</div><div class="line"></div><div class="line">    init(notificationCenter: NotificationCenter = .default) &#123;</div><div class="line">        self.notificationCenter = notificationCenter</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code>如果想学习更多的依赖注入，可以查看：“Different flavors of dependency injection in Swift&quot;，NotificationCenter将使用不同的通知名字来区分事件的监听或者发生。为了避免使用内联字符串作为API的一部分，我们将为NotificationCenter.Name添加扩展，来获得单一的消息来源的通知名字，我将添加一个回放开始，一个暂停、一个停止：
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">extension Notification.Name &#123;</div><div class="line">    static var playbackStarted: Notification.Name &#123;</div><div class="line">        return .init(rawValue: &quot;AudioPlayer.playbackStarted&quot;)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    static var playbackPaused: Notification.Name &#123;</div><div class="line">        return .init(rawValue: &quot;AudioPlayer.playbackPaused&quot;)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    static var playbackStopped: Notification.Name &#123;</div><div class="line">        return .init(rawValue: &quot;AudioPlayer.playbackStopped&quot;)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code>上面的扩展将帮助更方便的使用点语法来调用API来获取通知的名字，像.playbackStarted，使用起来非常不错。通过上面添加扩展，现在可以发送通知了。我们检查当前的状态看看我们需要发送什么通知，将之前的stateDidChange()方法补充完整。不仅是播放和暂停的状态，我们也需要把当前播放的item作为通知对象：
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">private extension AudioPlayer &#123;</div><div class="line">    func stateDidChange() &#123;</div><div class="line">        switch state &#123;</div><div class="line">        case .idle:</div><div class="line">            notificationCenter.post(name: .playbackStopped, object: nil)</div><div class="line">        case .playing(let item):</div><div class="line">            notificationCenter.post(name: .playbackStarted, object: item)</div><div class="line">        case .paused(let item):</div><div class="line">            notificationCenter.post(name: .playbackPaused, object: item)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code>就是这样！在此代码基础上，我们可以在任何地方轻松监听到当前录像播放的状态。举个例子，下面是可能会有一个控制器NowPlayingViewController监听何时录像播放开始，进而显示当前的名字和总时间。
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">class NowPlayingViewController: UIViewController &#123;</div><div class="line">    deinit &#123;</div><div class="line">        // If your app supports iOS 8 or earlier, you need to manually</div><div class="line">        // remove the observer from the center. In later versions</div><div class="line">        // this is done automatically.</div><div class="line">        notificationCenter.removeObserver(self)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    override func viewDidLoad() &#123;</div><div class="line">        super.viewDidLoad()</div><div class="line"></div><div class="line">        notificationCenter.addObserver(self,</div><div class="line">            selector: #selector(playbackDidStart),</div><div class="line">            name: .playbackStarted,</div><div class="line">            object: nil</div><div class="line">        )</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @objc private func playbackDidStart(_ notification: Notification) &#123;</div><div class="line">        guard let item = notification.object as? AudioPlayer.Item else &#123;</div><div class="line">            let object = notification.object as Any</div><div class="line">            assertionFailure(&quot;Invalid object: \(object)&quot;)</div><div class="line">            return</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        titleLabel.text = item.title</div><div class="line">        durationLabel.text = &quot;\(item.duration)&quot;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code>使用通知中心的优势就是非常容易实现，不仅是对象内部被监听，而且是任何一个想要开始监听它的内部。通知也是大多数Swift开发者经常使用的API，而且苹果自身也在使用它来发送系统的通知，比如键盘的事件。
+</code></pre><p>然而，这种方法也有明显的缺点。第一：尽管NotificationCenter是Objective-C API，不能使用Swift的特性，像泛型一样保持类型安全。尽管可以像上面一样实现(通过创建某种形式的解包)，默认的方式是需要我们像上面前几行playbackDidStart那样进行类型转换。这样是我们的代码非常脆弱，因为我们无法利用编译器来确保我们的观察者和被观察的对象使用相同类型的广播值。<br>说到广播，使用广播的另一个缺点就是通知没有任何限制，在应用内都可以监听到。虽然这样很方便我们在任何地方对观察的对象进行监听，但是它也使参与观察的对象之间的关系变得更好松散，使得应用程序的各个部分之间更加无法保持清晰的分离，尤其是在代码增长的时候。<br>    Observation protocols<br>    下面，让我们看看如何通过协议来构建一个更加严格标准、定义明确的监听API。当我们用这个技术的时候需要想要监AudioPlayer的对象遵守AudioPlayerObserver协议。就像我定义了三种通知为录像播放的每一种状态，我将定义了三种方法来监听每一种事件，就像这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">protocol AudioPlayerObserver: class &#123;</div><div class="line">    func audioPlayer(_ player: AudioPlayer,</div><div class="line">                     didStartPlaying item: AudioPlayer.Item)</div><div class="line"></div><div class="line">    func audioPlayer(_ player: AudioPlayer, </div><div class="line">                     didPausePlaybackOf item: AudioPlayer.Item)</div><div class="line"></div><div class="line">    func audioPlayerDidStop(_ player: AudioPlayer)</div><div class="line">&#125;</div><div class="line">为了只监听一个事件，我将使用协议扩展为每个事件来添加默认实现。</div><div class="line">extension AudioPlayerObserver &#123;</div><div class="line">    func audioPlayer(_ player: AudioPlayer,</div><div class="line">                     didStartPlaying item: AudioPlayer.Item) &#123;&#125;</div><div class="line"></div><div class="line">    func audioPlayer(_ player: AudioPlayer, </div><div class="line">                     didPausePlaybackOf item: AudioPlayer.Item) &#123;&#125;</div><div class="line"></div><div class="line">    func audioPlayerDidStop(_ player: AudioPlayer) &#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>弱存储<br>    当设计监听API的时候，通常好的做法就是对所有的监听者保持弱饮用。否则，当观察对象同时在观察自己时很容易造成循环饮用。然而，在Swift集合中用不错的方式弱引用存储对象不是最直接的方式，因为，集合默认对所有的成员保持强引用。<br>为了解决监听需求带来的问题，我将介绍一个小解包类型，对监听者只保持简单的弱引用状态。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">private extension AudioPlayer &#123;</div><div class="line">    struct Observation &#123;</div><div class="line">        weak var observer: AudioPlayerObserver?</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">使用上面的类型，现在我们给AudioPlayer添加一个监听集合。在这种情况下，我们将用一个键是ObjectIdentifier的字典插入和删除观察者们：</div><div class="line">class AudioPlayer &#123;</div><div class="line">    private var observations = [ObjectIdentifier : Observation]()</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<pre><code>ObjectIdentifier是系统内置的值类型，可以作为类对象实例的唯一表示。想要了解更多-请学习“Identifying objects in Swift”。
+</code></pre><p>我们可以在stateDidChange()中遍历所有的监听，并且调用相对应状态的协议来实现。而且值得注意的是，当我们在迭代的同时，还可以清除那些没有使用的观察值(如果相应的对象已经被释放销毁)。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">private extension AudioPlayer &#123;</div><div class="line">    func stateDidChange() &#123;</div><div class="line">        for (id, observation) in observations &#123;</div><div class="line">            // If the observer is no longer in memory, we</div><div class="line">            // can clean up the observation for its ID</div><div class="line">            guard let observer = observation.observer else &#123;</div><div class="line">                observations.removeValue(forKey: id)</div><div class="line">                continue</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            switch state &#123;</div><div class="line">            case .idle:</div><div class="line">                observer.audioPlayerDidStop(self)</div><div class="line">            case .playing(let item):</div><div class="line">                observer.audioPlayer(self, didStartPlaying: item)</div><div class="line">            case .paused(let item):</div><div class="line">                observer.audioPlayer(self, didPausePlaybackOf: item)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>观察<br>    最后，我们需要对象实现AudioPlayerObserver协议来注册自己成为观察者.我们同样需要一个简单取消是监听者的方式，以防监听者不再需要监听状态更新。为了实现这来两种情况，我们将会<br>AudioPlayer添加一个包含两个方法的扩展：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">extension AudioPlayer &#123;</div><div class="line">    func addObserver(_ observer: AudioPlayerObserver) &#123;</div><div class="line">        let id = ObjectIdentifier(observer)</div><div class="line">        observations[id] = Observation(observer: observer)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    func removeObserver(_ observer: AudioPlayerObserver) &#123;</div><div class="line">        let id = ObjectIdentifier(observer)</div><div class="line">        observations.removeValue(forKey: id)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<pre><code>非常棒！我们可以用新的监听协议代替通知来更新
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">NowPlayingViewController：</div><div class="line">class NowPlayingViewController: UIViewController &#123;</div><div class="line">    override func viewDidLoad() &#123;</div><div class="line">        super.viewDidLoad()</div><div class="line">        player.addObserver(self)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">extension NowPlayingViewController: AudioPlayerObserver &#123;</div><div class="line">    func audioPlayer(_ player: AudioPlayer,</div><div class="line">                     didStartPlaying item: AudioPlayer.Item) &#123;</div><div class="line">        titleLabel.text = item.title</div><div class="line">        durationLabel.text = &quot;\(item.duration)&quot;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code>正如上面你看到的那样，相比通知，使用监听协议的主要优势是我们确保编译时的类型安全。由于使用协议时直接调用AudiPlayer.Item类型，不需要在观察的方法中进行类型转换，是我们的代码更加清晰。
+</code></pre><p>添加一个明显的监听API也可以帮助理解监听类是如何工作的，而不需要弄清楚NotificationCenter应该使用什么。通过我们的API例子，你应该支持使用AudioPlayerObserver协议去监听。<br>然而，这种方法也有它自身的缺点，相比通知那就是在内部使用了更多的代码。它需要引入额外的协议和类型，如果代码非常依赖于观察结果，这可能就是一个缺点。<br>    未完待续：第二部分！</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/译文/" rel="tag"># 译文</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/21/一份惊喜,一份收获/" rel="next" title="一份惊喜,一份收获">
+                <i class="fa fa-chevron-left"></i> 一份惊喜,一份收获
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/uploads/avatar.png"
+              alt="PoetCoder" />
+          
+            <p class="site-author-name" itemprop="name">PoetCoder</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PoetCoder</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
